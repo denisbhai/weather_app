@@ -26,7 +26,7 @@ class ForecastChart extends StatelessWidget {
           
           padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withOpacity(0.4),
             borderRadius: BorderRadius.all(Radius.circular(10))
           ),
           child: LineChart(

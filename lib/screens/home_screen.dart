@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -82,11 +84,15 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocBuilder<WeatherCubit, WeatherState>(
               builder: (context, state) {
                 if (state is WeatherLoaded) {
-                  return Image.network(
-                    getWeatherBackground(state.current?.weather[0]['main']),
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
+                  return ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                    child: Image.network(
+                      // getWeatherBackground(state.current?.weather[0]['main']),
+                      getWeatherBackground('clouds'),
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.cover,
+                    ),
                   );
                 }
                 return const SizedBox.shrink();
@@ -189,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         horizontal: 10, vertical: 15),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
-                                      color: Colors.black.withOpacity(0.3),
+                                      color: Colors.black.withOpacity(0.4),
                                     ),
                                     child: Column(
                                       children: [
@@ -467,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             color:
-                                                Colors.black.withOpacity(0.3),
+                                                Colors.black.withOpacity(0.4),
                                           ),
                                           child: Column(
                                             mainAxisAlignment:
@@ -550,7 +556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       itemBuilder: (context, i) {
                                         final d = state.forecast?[i];
                                         return Card(
-                                          color: Colors.black.withOpacity(0.3),
+                                          color: Colors.black.withOpacity(0.4),
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15, vertical: 5),
