@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Weather App',
           theme: ThemeData(primarySwatch: Colors.blue),
-          home: const SplashScreen(),
+          home: SplashScreen(),
         ),
       ),
     );
