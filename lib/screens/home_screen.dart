@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -87,19 +86,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ImageFiltered(
                     imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                     child: Image.network(
-                      // getWeatherBackground(state.current?.weather[0]['main']),
-                      getWeatherBackground('clouds'),
+                      getWeatherBackground(state.current?.weather[0]['main']),
+                      // getWeatherBackground('clouds'),
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
                     ),
                   );
                 }
+                if (state is WeatherLoading) {
+                  return Stack(
+                    children: [
+                      ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                        child: Image.asset(
+                          "assets/images/cloud.jpg",
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const Center(
+                          child: CircularProgressIndicator()),
+                    ],
+                  );
+                }
                 return const SizedBox.shrink();
               },
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   Row(
@@ -176,10 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           return const Center(
                               child: Text('Search or use location'));
                         }
-                        if (state is WeatherLoading) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
                         if (state is WeatherError) {
                           return Center(child: Text('Error: ${state.message}'));
                         }
@@ -205,8 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     "${w?.dayName}, ${w?.localDate}",
@@ -458,8 +469,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   const SizedBox(height: 8),
                                   SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
+                                    height: MediaQuery.of(context).size.width *
+                                        0.44,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: state.hourly?.length,
@@ -470,8 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 10, vertical: 5),
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(12),
                                             color:
                                                 Colors.black.withOpacity(0.4),
                                           ),
@@ -546,8 +556,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )),
                                   const SizedBox(height: 8),
                                   SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.28,
+                                    height: MediaQuery.of(context).size.width *
+                                        0.58,
                                     child: ListView.separated(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: state.forecast?.length ?? 0,
@@ -683,8 +693,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       lat: w?.lat ?? 0.00,
                                                       lon: w?.lon ?? 0.00,
                                                       temp: w?.temp ?? 0.00,
-                                                      humidity:
-                                                          w?.humidity ?? 0,
+                                                      humidity: w?.humidity ?? 0,
                                                       city: w?.city ?? "",
                                                     ),
                                                   ),

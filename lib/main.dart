@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubits/weather_cubit.dart';
 import 'package:weather_app/screens/home_screen.dart';
+import 'package:weather_app/screens/splash_screen.dart';
 import 'package:weather_app/services/weather_repository.dart';
 
 import 'cubits/search_cubit.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Weather App',
           theme: ThemeData(primarySwatch: Colors.blue),
-          home: const HomeScreen(),
+          home: const SplashScreen(),
         ),
       ),
     );
