@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/search_cubit.dart';
@@ -9,14 +8,11 @@ class CitySearchScreen extends StatelessWidget {
   CitySearchScreen({super.key});
 
   final TextEditingController _controller = TextEditingController();
-  final Debouncer _deBouncer = Debouncer(milliseconds: 500); // 0.5s delay
+  final DeBouncer _deBouncer = DeBouncer(milliseconds: 500); // 0.5s delay
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Search Location"),
-      // ),
       body: SafeArea(
         child: Stack(
           children: [

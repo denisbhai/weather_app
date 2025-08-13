@@ -1,6 +1,4 @@
-// search_cubit.dart
 import 'dart:ui';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +23,6 @@ class SearchCubit extends Cubit<SearchState> {
         'https://api.openweathermap.org/data/2.5/find?q=$query&appid=$apiKey&units=metric',
       );
       final res = await http.get(url);
-      print("==resdata===resdata=${query}====${apiKey}=${res.body}");
 
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
@@ -40,12 +37,12 @@ class SearchCubit extends Cubit<SearchState> {
 }
 
 
-class Debouncer {
+class DeBouncer {
   final int milliseconds;
   VoidCallback? action;
   Timer? _timer;
 
-  Debouncer({required this.milliseconds});
+  DeBouncer({required this.milliseconds});
 
   run(VoidCallback action) {
     _timer?.cancel();

@@ -1,4 +1,3 @@
-// search_state.dart
 abstract class SearchState {}
 
 class SearchInitial extends SearchState {}

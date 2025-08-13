@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _cityController = TextEditingController();
 
   Future<void> _getLocationAndFetch() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -69,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     context.read<WeatherCubit>().fetchByCoords(20.5937, 78.9629);
-    // optionally auto-fetch current location on start:
     _getLocationAndFetch();
     super.initState();
   }
@@ -162,8 +160,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
 
                               if (selectedCity != null) {
-                                print(
-                                    "Selected City: ${selectedCity['name']}, ${selectedCity['sys']['country']}");
                                 context
                                     .read<WeatherCubit>()
                                     .fetchByCity(selectedCity['name']);

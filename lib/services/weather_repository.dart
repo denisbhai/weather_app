@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:weather_app/models/weather_model.dart';
@@ -12,12 +11,13 @@ class WeatherRepository {
   WeatherRepository({http.Client? httpClient})
       : httpClient = httpClient ?? http.Client();
 
+  final String _baseUrl = "https://api.openweathermap.org/data/2.5/";
+
   Future<Weather> fetchCurrentByCoords(double lat, double lon) async {
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&units=metric&appid=$_apiKey',
+      '${_baseUrl}weather?lat=$lat&lon=$lon&units=metric&appid=$_apiKey',
     );
     final res = await httpClient.get(uri);
-    log("message========${Weather.fromJson(json.decode(res.body))}");
     if (res.statusCode != 200) {
       throw Exception('Failed to load weather: ${res.body}');
     }
@@ -27,7 +27,7 @@ class WeatherRepository {
   Future<List<DailyForecast>> fetch5DayForecastByCoords(
       double lat, double lon) async {
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&units=metric&appid=$_apiKey',
+      '${_baseUrl}forecast?lat=$lat&lon=$lon&units=metric&appid=$_apiKey',
     );
     final res = await httpClient.get(uri);
     if (res.statusCode != 200) {
@@ -38,7 +38,7 @@ class WeatherRepository {
 
   Future<List<HourlyForecast>> fetchHourlyForecastByCoords(double lat, double lon) async {
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&units=metric&appid=$_apiKey',
+      '${_baseUrl}forecast?lat=$lat&lon=$lon&units=metric&appid=$_apiKey',
     );
     final res = await httpClient.get(uri);
     if (res.statusCode != 200) {
@@ -48,7 +48,6 @@ class WeatherRepository {
     final timezoneOffset = data['city']['timezone'] as int;
     final nowUtc = DateTime.now().toUtc();
     final nowLocal = nowUtc.add(Duration(seconds: timezoneOffset));
-    print("====timezoneOffset==$nowLocal");
     final endOfTodayLocal = DateTime.utc(
       nowLocal.year,
       nowLocal.month,
@@ -56,12 +55,9 @@ class WeatherRepository {
       23,
       59,
     );
-    print("====endOfTodayLocal====$endOfTodayLocal");
 
     final List list = data['list'];
     return list.map((item) => HourlyForecast.fromJson(item)).where((hour) {
-      print("hour===========hour${hour.time}=nowLocal=$nowLocal=endOfTodayLocal=$endOfTodayLocal");
-      print("true==${hour.time.isAfter(nowLocal)}==${hour.time.isBefore(endOfTodayLocal)}");
       final sameHour = hour.time.year == nowLocal.year &&
           hour.time.month == nowLocal.month &&
           hour.time.day == nowLocal.day &&
@@ -74,10 +70,9 @@ class WeatherRepository {
 
   Future<Weather> fetchCurrentByCity(String city) async {
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$_apiKey',
+      '${_baseUrl}weather?q=$city&units=metric&appid=$_apiKey',
     );
     final res = await httpClient.get(uri);
-    log("message========${Weather.fromJson(json.decode(res.body))}");
     if (res.statusCode != 200) {
       throw Exception('Failed to load weather: ${res.body}');
     }
@@ -86,7 +81,7 @@ class WeatherRepository {
 
   Future<List<DailyForecast>> fetch5DayForecastByCity(String city) async {
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/forecast?q=$city&units=metric&appid=$_apiKey',
+      '${_baseUrl}forecast?q=$city&units=metric&appid=$_apiKey',
     );
     final res = await httpClient.get(uri);
     if (res.statusCode != 200) {
@@ -97,7 +92,7 @@ class WeatherRepository {
 
   Future<List<HourlyForecast>> fetchHourlyForecastByCity(String city) async {
     final uri = Uri.parse(
-      'https://api.openweathermap.org/data/2.5/forecast?q=$city&units=metric&appid=$_apiKey',
+      '${_baseUrl}forecast?q=$city&units=metric&appid=$_apiKey',
     );
     final res = await httpClient.get(uri);
     if (res.statusCode != 200) {
@@ -107,7 +102,6 @@ class WeatherRepository {
     final timezoneOffset = data['city']['timezone'] as int;
     final nowUtc = DateTime.now().toUtc();
     final nowLocal = nowUtc.add(Duration(seconds: timezoneOffset));
-    print("====timezoneOffset==$nowLocal");
     final endOfTodayLocal = DateTime.utc(
       nowLocal.year,
       nowLocal.month,
@@ -115,7 +109,6 @@ class WeatherRepository {
       23,
       59,
     );
-    print("====endOfTodayLocal====$endOfTodayLocal");
     final List list = data['list'];
     return list.map((item) => HourlyForecast.fromJson(item)).where((hour) {
       final sameHour = hour.time.year == nowLocal.year &&
@@ -123,7 +116,6 @@ class WeatherRepository {
           hour.time.day == nowLocal.day &&
           hour.time.hour == nowLocal.hour;
 
-      // Include same hour OR any time after nowLocal but before endOfToday
       return sameHour ||
           (hour.time.isAfter(nowLocal) && hour.time.isBefore(endOfTodayLocal));
     }).toList();
